@@ -30,7 +30,8 @@ class PageManager:
         window.tools_page = ToolsPage()
 
         window.settings_page = SettingsPage(
-            window.container.models
+            window.container.models,
+            reload_model=window.container.reload_model
         )
 
         window.formatter_page = FormatterPage()

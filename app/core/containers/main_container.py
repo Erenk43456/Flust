@@ -93,3 +93,21 @@ class MainContainer:
         self.orchestrator = MainOrchestrator(
             self
         )
+
+    def reload_model(
+        self,
+        slot
+    ):
+        llm = self.models.reload_model(
+            slot
+        )
+
+        self.agents.reload_model(
+            slot,
+            llm
+        )
+
+        self.chat.reload_model(
+            slot,
+            llm
+        )

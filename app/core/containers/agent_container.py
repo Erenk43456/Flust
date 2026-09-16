@@ -67,3 +67,13 @@ class AgentContainer:
             main.memory.memory
 
         )
+
+    def reload_model(self, slot, llm):
+        if slot == "chat":
+            self.chat.llm = llm
+
+        elif slot == "code":
+            self.code.llm = llm
+
+        elif slot == "decision":
+            self.decision.llm = llm

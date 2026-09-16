@@ -35,12 +35,14 @@ class SettingsPage(QWidget):
 
     def __init__(
         self,
-        models
+        models,
+        reload_model=None
     ):
 
         super().__init__()
 
         self.models = models
+        self.reload_model = reload_model
         self.registry = models.registry
 
         self.model_sections = {}
@@ -506,6 +508,9 @@ class SettingsPage(QWidget):
         # Therefore the previous connection test is no longer
         # valid for the new configuration.
         self.connection_status[slot] = None
+
+        if self.reload_model is not None:
+            self.reload_model(slot)
 
         section.load_model()
 

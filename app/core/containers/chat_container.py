@@ -30,3 +30,7 @@ class ChatContainer:
             self
 
         )
+
+    def reload_model(self, slot, llm):
+        if slot == "chat":
+            self.llm = llm
