@@ -1,6 +1,6 @@
 # Flust
 
-> A modular AI agent framework designed for autonomous task execution, AI-assisted software development, persistent memory, and self-improvement.
+> A Python based modular AI agent framework designed for autonomous task execution, AI-assisted software development, persistent memory, and self-improvement.
 
 **Flust** is a Python-based AI agent framework built around modular agents, orchestrators, tools, memory systems, repository intelligence, and model abstractions.
 
