@@ -1,196 +1,215 @@
-# AI-Studio-Agent
+# Flust
 
-> A modular, extensible AI agent framework for intelligent task routing, planning, tool execution, memory management, and AI-assisted software development.
+> A modular AI agent framework designed for autonomous task execution, AI-assisted software development, persistent memory, and self-improvement.
 
-**AI-Studio-Agent** is a Python-based desktop AI assistant framework built around a modular **multi-agent and orchestrator-driven architecture**.
+**Flust** is a Python-based AI agent framework built around modular agents, orchestrators, tools, memory systems, repository intelligence, and model abstractions.
 
-The project separates **decision-making, planning, execution, memory, model integration, and user interaction** into independent components.
-
-Instead of relying on a single monolithic agent, AI-Studio-Agent routes requests to the appropriate subsystem, creates structured execution plans when required, executes operations through registered tools, and returns structured results to the user.
-
-The architecture is designed to remain **modular, extensible, model-independent, testable, and maintainable**.
-
----
-
-## ✨ Features
-
-* 🧠 Multi-agent architecture
-* 🔀 Centralized request routing
-* 📋 LLM-based task planning
-* 🏗️ Container-based dependency composition
-* 🎯 Orchestrator-driven workflows
-* 🛠️ Centralized tool registry
-* 💻 AI-assisted software development
-* 💾 Persistent conversation memory
-* 🧠 Project-oriented memory
-* 🔒 Workspace-restricted filesystem operations
-* ♻️ Automatic file backups
-* 🔍 Code analysis and repair
-* 🤖 LLM abstraction layer
-* 🌐 API-based LLM integration
-* 🖥️ PySide6 desktop application
-* ⚙️ Background AI execution
-* 🧪 Pytest-based automated testing
-* 🧰 Development testing infrastructure
-* 📝 Structured logging
-* ❌ Explicit error propagation
-* 🧩 Extensible component architecture
-
----
-
-# 🏗️ Architecture
-
-AI-Studio-Agent uses a layered architecture built around:
-
-* **Containers** — application composition and dependency wiring
-* **Orchestrators** — runtime workflow coordination
-* **Agents** — specialized reasoning and execution
-* **Tools** — controlled concrete capabilities
-* **Memory** — persistent and contextual information
-* **LLM abstractions** — provider and model independence
-* **GUI** — user interaction and presentation
-
-A key architectural principle is the separation between **composition** and **execution**.
+The project is designed around a simple principle:
 
 ```text
-┌──────────────────────────────┐
-│          PySide6 GUI         │
-│                              │
-│     ChatController           │
-│     AIWorker                 │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│      MainOrchestrator        │
-│                              │
-│      Request Routing         │
-│      System Selection        │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│       DecisionAgent          │
-│                              │
-│    Request Classification    │
-└──────────────┬───────────────┘
-               │
-       ┌───────┼────────┐
-       │       │        │
-       ▼       ▼        ▼
-    Chat    Memory  Development
-    System  System     System
-                       │
-                       ▼
-              DevelopmentOrchestrator
-                       │
-              ┌────────┼────────┐
-              │        │        │
-              ▼        ▼        ▼
-           Planner  CodeAgent  Tools
-              │        │        │
-              └────────┼────────┘
-                       ▼
-                  Execution
-                    Results
+Understand → Plan → Execute → Validate → Learn → Improve
+```
+
+The long-term objective is to evolve Flust from an AI-assisted development framework into a system capable of **continuously analyzing, validating, and improving its own software environment through a controlled self-development loop**.
+
+---
+
+# Vision
+
+Flust is being developed toward a **self-developing AI system**.
+
+The long-term architecture is intended to allow Flust to:
+
+* understand a software repository
+* maintain persistent project knowledge
+* identify problems and improvement opportunities
+* create structured development plans
+* modify code through controlled tools
+* validate changes through automated tests
+* analyze execution results
+* update its project knowledge
+* identify the next improvement cycle
+
+The target architecture is therefore not simply:
+
+```text
+User → AI → Code
+```
+
+but:
+
+```text
+                ┌──────────────────────┐
+                │       Flust          │
+                │                      │
+                │  Understand          │
+                │  Plan                │
+                │  Execute             │
+                │  Validate            │
+                │  Learn               │
+                │  Improve             │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                    Next Development
+                         Cycle
+```
+
+The self-development loop is a **long-term architectural goal**. The current implementation already contains several of its required building blocks, but autonomous self-improvement is not yet considered a fully implemented subsystem.
+
+---
+
+# Architecture
+
+Flust uses a layered architecture based on dependency containers, orchestrators, agents, tools, memory, repository intelligence, and LLM abstractions.
+
+The current application composition is centered around `MainContainer`.
+
+```text
+                         MainContainer
+                              │
+        ┌─────────────┬───────┼────────┬──────────────┐
+        │             │       │        │              │
+        ▼             ▼       ▼        ▼              ▼
+   CoreContainer  ModelContainer  MemoryContainer  ToolContainer
+        │             │       │        │              │
+        │             │       │        ▼              │
+        │             │       │   Memory System       │
+        │             │       │                       │
+        │             │       └────────┬──────────────┘
+        │             │                │
+        │             ▼                ▼
+        │        LLM Providers      Agents
+        │                              │
+        │                              ▼
+        │                       System Containers
+        │                         │           │
+        │                         ▼           ▼
+        │                       Chat      Development
+        │                         │           │
+        └─────────────────────────┴─────┬─────┘
+                                        ▼
+                                MainOrchestrator
+```
+
+The architecture separates **dependency composition** from **runtime execution**.
+
+```text
+Composition
+    ↓
+Containers
+    ↓
+Orchestrators
+    ↓
+Agents
+    ↓
+Tools / Memory / LLM
 ```
 
 ---
 
-# 🧩 Container Architecture
+# Runtime Request Flow
 
-Containers form the **composition and dependency-wiring layer** of the application.
-
-They construct and connect:
-
-* Agents
-* Orchestrators
-* Tools
-* Memory systems
-* LLM instances
-* Supporting services
-
-Runtime components do not need to construct their own dependencies.
+A normal request enters through the application layer and is routed by the main orchestrator.
 
 ```text
-                    Application Container
-                             │
-             ┌───────────────┼────────────────┐
-             │               │                │
-             ▼               ▼                ▼
-      ChatContainer   MemoryContainer   DevelopmentContainer
-             │               │                │
-             ▼               ▼                ▼
-        ChatAgent      Memory System     PlannerAgent
-        ChatOrch.      Conversation      CodeAgent
-        Chat LLM       Project Memory    Repository Analyzer
-             │               │                │
-             ▼               ▼                ▼
-        Chat System     Memory System   Development System
+User
+ │
+ ▼
+PySide6 Application
+ │
+ ▼
+AI Worker
+ │
+ ▼
+MainOrchestrator
+ │
+ ▼
+DecisionAgent
+ │
+ ├───────────────┬────────────────┐
+ ▼               ▼                ▼
+Chat          Memory         Development
+ │               │                │
+ ▼               ▼                ▼
+Chat           Memory       Development
+Orchestrator   Orchestrator  Orchestrator
 ```
 
-This keeps **object construction** separate from **runtime business logic**.
-
-### Development Container
-
-The development subsystem is composed approximately as follows:
-
-```text
-DevelopmentContainer
-        │
-        ├── Planner LLM
-        │       │
-        │       ▼
-        │   PlannerAgent
-        │
-        ├── Code LLM
-        │       │
-        │       ▼
-        │   CodeAgent
-        │
-        ├── Tool Registry
-        │       ├── Repository Analyzer
-        │       ├── File Tool
-        │       ├── Code Writer
-        │       ├── Code Analyzer
-        │       └── Code Repair
-        │
-        ├── Project Memory
-        │
-        └── DevelopmentOrchestrator
-                ├── PlannerAgent
-                ├── CodeAgent
-                ├── Repository Analyzer
-                └── Tool Registry
-```
-
-The `DevelopmentOrchestrator` receives these dependencies from the container instead of constructing them itself.
-
-This keeps orchestration focused on **workflow execution** rather than application composition.
+The `MainOrchestrator` is responsible for selecting the appropriate subsystem and forwarding the request together with the execution trace.
 
 ---
 
-# 🔄 Request Execution Flow
+# Development Architecture
 
-A typical development request follows this pipeline:
+Development tasks are handled by a dedicated development subsystem.
+
+```text
+                       DevelopmentContainer
+                                │
+        ┌───────────────────────┼────────────────────────┐
+        │                       │                        │
+        ▼                       ▼                        ▼
+ DevelopmentContext       ProjectMemorySync       WorkspaceWatcher
+        │                       │                        │
+        │                       ▼                        │
+        │                Project Memory                  │
+        │                                                │
+        └───────────────────────┬────────────────────────┘
+                                │
+                                ▼
+                    DevelopmentOrchestrator
+                                │
+             ┌──────────────────┼──────────────────┐
+             │                  │                  │
+             ▼                  ▼                  ▼
+          Planner            ToolAgent       Repository Analyzer
+             │                  │
+             ▼                  │
+      Structured Plan           │
+                                ▼
+                         Tool Registry
+                                │
+              ┌─────────────────┼─────────────────┐
+              │                 │                 │
+              ▼                 ▼                 ▼
+          File Tool       Code Tools        Analysis Tools
+                                │
+                                ▼
+                           Execution
+                                │
+                                ▼
+                             Result
+```
+
+The current development orchestrator supports three development actions:
+
+```text
+analyze
+improve
+code
+```
+
+Normal code tasks follow the development context and planning pipeline. Repository analysis can be used directly, while project-memory information can be synchronized when the required development context is unavailable.
+
+---
+
+# Development Execution Pipeline
+
+The primary development execution path is:
 
 ```text
 User Request
      │
      ▼
-ChatController
-     │
-     ▼
-AIWorker
-     │
-     ▼
-MainOrchestrator
-     │
-     ▼
-DecisionAgent
-     │
-     ▼
 DevelopmentOrchestrator
+     │
+     ▼
+DevelopmentContext
+     │
+     ├── Project Memory
+     │
+     └── Repository Context
      │
      ▼
 PlannerAgent
@@ -198,355 +217,282 @@ PlannerAgent
      ▼
 Structured Execution Plan
      │
-     ├─────────────────┐
-     │                 │
-     ▼                 ▼
-Tool Registry       CodeAgent
-     │                 │
- ┌───┼───────┐         │
- ▼   ▼       ▼         │
-File Analyzer Repair   │
- │           │         │
- └───────────┴─────────┘
-             │
-             ▼
-      Execution Results
-             │
-             ▼
-      MainOrchestrator
-             │
-             ▼
-          AIWorker
-             │
-             ▼
-            GUI
-```
-
-The architecture separates five major responsibilities:
-
-| Responsibility   | Description                                          |
-| ---------------- | ---------------------------------------------------- |
-| **Decision**     | Determines which subsystem should handle the request |
-| **Planning**     | Determines which operations are required             |
-| **Execution**    | Performs the requested operations                    |
-| **Memory**       | Provides persistent and contextual information       |
-| **Presentation** | Returns results to the user                          |
-
----
-
-# 🧠 Separation of Responsibilities
-
-| Layer                | Responsibility                               |
-| -------------------- | -------------------------------------------- |
-| GUI                  | User interaction and presentation            |
-| Worker               | Background execution                         |
-| Main Orchestrator    | Global request routing                       |
-| Decision Agent       | Request classification                       |
-| System Orchestrators | Subsystem workflow control                   |
-| Containers           | Dependency construction and wiring           |
-| Agents               | Specialized reasoning and task execution     |
-| Planner              | Natural language → structured execution plan |
-| Tool Registry        | Tool discovery and dispatch                  |
-| Tools                | Concrete operations                          |
-| Memory               | Persistent and contextual information        |
-| LLM Layer            | Provider and model abstraction               |
-
-The dependency direction is intentionally kept simple:
-
-```text
-Composition
-     ↓
-Containers
-     ↓
-Orchestration
-     ↓
-Agents
-     ↓
-Tools / Memory / LLM
-```
-
-This allows individual components to evolve without forcing unrelated parts of the system to change.
-
----
-
-# 🧠 Core Systems
-
-## Main Orchestrator
-
-The `MainOrchestrator` acts as the central coordination layer.
-
-Its responsibilities include:
-
-* Receiving user requests
-* Invoking the decision system
-* Selecting the appropriate subsystem
-* Passing request context
-* Executing the selected workflow
-* Returning the final result
-
-```text
-User
- │
- ▼
-MainOrchestrator
- │
- ▼
-DecisionAgent
- │
- ├── Chat
- ├── Memory
- └── Development
-```
-
-This prevents high-level application flow from becoming tightly coupled to individual agents.
-
----
-
-## Decision Agent
-
-The `DecisionAgent` determines which subsystem should handle a request.
-
-Examples:
-
-```text
-"What is Python?"
-        │
-        ▼
-      Chat
-```
-
-```text
-"Create a file called test.txt"
-        │
-        ▼
-   Development
-```
-
-```text
-"Remember that my project uses Python 3.12"
-        │
-        ▼
-     Memory
-```
-
-The decision layer also provides an extension point for introducing additional systems in the future.
-
----
-
-# 🛠️ Development System
-
-The Development System handles programming, file manipulation, analysis, and development-oriented workflows.
-
-```text
-DevelopmentOrchestrator
-        │
-        ├── PlannerAgent
-        ├── CodeAgent
-        ├── Repository Analyzer
-        └── Tool Registry
-```
-
-### Development Workflow
-
-```text
-User Request
+     ▼
+ToolAgent
      │
      ▼
-DevelopmentOrchestrator
+Tool Registry
+     │
+     ├── File Operations
+     ├── Code Operations
+     ├── Repository Analysis
+     └── Other Registered Tools
      │
      ▼
-PlannerAgent
+Execution Results
      │
      ▼
-Structured Plan
-     │
-     ├───────────────┐
-     │               │
-     ▼               ▼
-Tool Execution    CodeAgent
-     │               │
-     ▼               ▼
-File / Analysis   Code Tasks
-     │               │
-     └───────┬───────┘
-             ▼
-          Results
+Development Response
 ```
 
-The orchestrator is responsible for executing generated plans and propagating failures instead of blindly reporting every execution as successful.
+The LLM is therefore separated from direct infrastructure access.
+
+```text
+LLM
+ ↓
+Plan
+ ↓
+Validated Application Flow
+ ↓
+Controlled Tool
+ ↓
+Result
+```
 
 ---
 
-# 📋 LLM-Based Planning
+# Self-Development Architecture
 
-Natural-language development requests can be converted into structured execution plans.
-
-For example:
+The long-term self-development system extends the current development pipeline with validation, feedback, and improvement cycles.
 
 ```text
-test.txt dosyası oluştur içine merhaba yaz
+                    Self-Development Loop
+                           │
+                           ▼
+                  Repository Observation
+                           │
+                           ▼
+                    Repository Analysis
+                           │
+                           ▼
+                     Problem Detection
+                           │
+                           ▼
+                   Improvement Planning
+                           │
+                           ▼
+                    Controlled Changes
+                           │
+                           ▼
+                       Validation
+                           │
+                  ┌────────┴────────┐
+                  │                 │
+                PASS              FAIL
+                  │                 │
+                  ▼                 ▼
+             Knowledge         Failure Analysis
+              Update                │
+                  │                 │
+                  └────────┬────────┘
+                           ▼
+                    Improvement Memory
+                           │
+                           ▼
+                    Next Development
+                         Cycle
 ```
 
-can become:
+This architecture is deliberately separated from unrestricted autonomous modification.
 
-```json
-{
-  "steps": [
-    {
-      "tool": "file",
-      "action": "write",
-      "filename": "test.txt",
-      "content": "merhaba"
-    }
-  ]
-}
-```
+Future self-development must remain bounded by:
 
-The orchestrator resolves the requested tool through the tool registry and executes the operation.
-
-This creates a clear separation between:
-
-```text
-Reasoning
-    ↓
-Planning
-    ↓
-Execution
-```
-
-The LLM does **not** directly control application infrastructure.
-
-Instead, it produces a structured plan that the application can validate and execute through controlled capabilities.
+* workspace isolation
+* explicit tool capabilities
+* structured plans
+* validation
+* test execution
+* execution tracing
+* persistent project knowledge
+* failure propagation
 
 ---
 
-# 🔧 Tool System
+# Agents
 
-AI-Studio-Agent exposes capabilities through a centralized tool registry.
+Agents provide specialized reasoning or execution responsibilities.
 
-### Current Tools
+The current architecture includes components such as:
 
-| Tool            | Purpose                          |
-| --------------- | -------------------------------- |
-| `calculator`    | Mathematical operations          |
-| `file`          | Workspace file operations        |
-| `code_writer`   | Code generation and modification |
-| `code_analyzer` | Code analysis                    |
-| `code_repair`   | Code repair                      |
+| Agent           | Responsibility                             |
+| --------------- | ------------------------------------------ |
+| `DecisionAgent` | Request and subsystem classification       |
+| `PlannerAgent`  | Natural language request → structured plan |
+| `ToolAgent`     | Controlled execution of planned tool steps |
+| `CodeAgent`     | Code generation and modification           |
+| `MemoryAgent`   | Memory-oriented operations                 |
 
-The execution model is:
+Agents receive their dependencies from the application containers rather than constructing the complete application graph themselves.
+
+---
+
+# Orchestrators
+
+Orchestrators control workflows between agents, tools, memory, and application systems.
+
+| Orchestrator              | Responsibility         |
+| ------------------------- | ---------------------- |
+| `MainOrchestrator`        | Global request routing |
+| `ChatOrchestrator`        | Chat workflow          |
+| `MemoryOrchestrator`      | Memory workflow        |
+| `DevelopmentOrchestrator` | Development workflow   |
+
+This separation keeps system-level workflow control independent from individual tool implementations.
+
+---
+
+# Tool System
+
+Flust exposes concrete capabilities through a centralized tool registry.
+
+The tool layer provides controlled operations such as:
+
+* file operations
+* code writing
+* code analysis
+* code repair
+* repository analysis
+* validation
+* formatting
+* memory operations
+* calculation
+
+The general execution model is:
 
 ```text
 Agent
   │
   ▼
+ToolAgent
+  │
+  ▼
 Tool Registry
   │
   ▼
-Requested Tool
+Registered Tool
   │
   ▼
-execute(...)
+Execution
   │
   ▼
-Result
+Structured Result
 ```
 
-This allows new capabilities to be introduced without tightly coupling agents to individual tool implementations.
+Tools provide the controlled boundary between AI-generated plans and real application operations.
 
 ---
 
-# 🔒 Workspace Security
+# Workspace Isolation
 
-File operations are restricted to a configured workspace boundary.
-
-The file system tool prevents normal operations from escaping the allowed workspace.
-
-For example, an attempt to access:
+Development operations are restricted to the configured workspace.
 
 ```text
-C:\Windows\System32
+                  Flust
+                    │
+                    ▼
+             Workspace Boundary
+                    │
+          ┌─────────┴─────────┐
+          │                   │
+       Allowed              Blocked
+       Paths                 Paths
+          │                   │
+          ▼                   ▼
+     Project Files      Outside Workspace
 ```
 
-is rejected when the target is outside the configured workspace.
+Workspace isolation is a core safety requirement for AI-assisted development.
 
-This creates an explicit filesystem boundary between AI-generated operations and the host operating system.
-
-The goal is to ensure that development tools operate within a controlled environment rather than having unrestricted filesystem access.
+The framework is designed so that an AI-generated operation does not automatically receive unrestricted access to the host filesystem.
 
 ---
 
-# ♻️ File Backup System
+# Repository Intelligence
 
-File modifications can automatically create backups before overwriting existing files.
+Flust contains repository-oriented analysis infrastructure.
 
-Example:
-
-```text
-test.txt
-test.txt.backup_<identifier>
-```
-
-This provides a basic recovery mechanism for AI-generated modifications and reduces the risk of accidental data loss.
-
----
-
-# 💬 Conversation System
-
-The framework maintains persistent conversation history.
-
-A conversation entry follows the general structure:
-
-```json
-{
-  "user": "...",
-  "assistant": "...",
-  "time": "..."
-}
-```
-
-The system keeps a configurable recent-history window rather than allowing the active context to grow indefinitely.
-
-Recent conversation context can then be supplied to the Chat Agent.
-
----
-
-# 🧠 Memory Architecture
-
-AI-Studio-Agent separates contextual information into different memory layers.
-
-```text
-                    Memory
-                      │
-          ┌───────────┴───────────┐
-          │                       │
- Conversation Memory       Project Memory
-          │                       │
-          ▼                       ▼
-   Recent Context           Project Context
-```
-
-### Conversation Memory
-
-Stores recent user/assistant interactions.
-
-### General Memory
-
-Stores persistent information that can be recalled by agents.
-
-### Project Memory
-
-Stores project-specific information used during development workflows.
-
-This separation allows conversational context and development context to evolve independently.
-
----
-
-# 🤖 LLM Architecture
-
-Agents interact with language models through an abstraction layer.
+The repository intelligence layer is responsible for building development context from the project itself.
 
 Conceptually:
+
+```text
+Repository
+    │
+    ▼
+Repository Analyzer
+    │
+    ├── Repository Structure
+    ├── Source Information
+    ├── Project Knowledge
+    └── Development Context
+            │
+            ▼
+      Planner / Agents
+```
+
+The development system can use stored project information and synchronize it when workspace changes occur.
+
+---
+
+# Project Memory
+
+Project memory provides persistent knowledge about the development environment.
+
+```text
+                Project Memory
+                     │
+        ┌────────────┼────────────┐
+        │            │            │
+        ▼            ▼            ▼
+ Architecture     Modules      Development
+ Knowledge        / Files        Context
+```
+
+The current development container initializes `ProjectMemorySync` and attaches a `WorkspaceWatcher`.
+
+```text
+Workspace Change
+       │
+       ▼
+WorkspaceWatcher
+       │
+       ▼
+ProjectMemorySync
+       │
+       ▼
+Repository Analyzer
+       │
+       ▼
+Project Memory
+```
+
+This allows project knowledge to evolve with repository changes.
+
+---
+
+# Conversation Memory
+
+Conversation state is maintained separately from project-oriented knowledge.
+
+```text
+Memory
+ │
+ ├── Conversation Context
+ │
+ ├── General Memory
+ │
+ └── Project Memory
+```
+
+This separation prevents short-lived conversational context from being tightly coupled to persistent repository knowledge.
+
+---
+
+# LLM Architecture
+
+LLM dependencies are abstracted from the agents that consume them.
+
+The architecture allows different workloads to use different model configurations.
 
 ```text
 DecisionAgent ──► Decision LLM
@@ -555,491 +501,507 @@ CodeAgent     ──► Code LLM
 ChatAgent     ──► Chat LLM
 ```
 
-Each agent can therefore have its own LLM dependency.
+This allows model specialization without changing the higher-level agent architecture.
 
-The current configuration may use the same model for multiple workloads to simplify development and maintain consistency.
-
-The architecture supports assigning different models to different workloads:
+The framework can therefore evolve toward configurations such as:
 
 ```text
-Decision Agent → Fast model
-Planner Agent  → Reasoning model
-Code Agent     → Coding model
-Chat Agent     → General-purpose model
+Fast Model       → Routing / Classification
+Reasoning Model  → Planning
+Coding Model     → Code Generation
+General Model    → Conversation
 ```
 
-This allows model specialization to be introduced without redesigning the agent architecture.
+Provider-specific implementations remain behind the LLM abstraction layer.
 
 ---
 
-# 🌐 LLM Provider Abstraction
+# Desktop Application
 
-The project contains an abstraction layer between agents and provider-specific LLM implementations.
+The desktop interface is built with **PySide6**.
 
-The current development environment uses **NVIDIA NIM** with:
-
-```text
-openai/gpt-oss-20b
-```
-
-The provider abstraction is intended to support:
-
-* Local LLMs
-* Other API providers
-* Different models per agent
-* Custom inference backends
-* Hybrid local/API configurations
-
-The core agent architecture is therefore not tied to a single model provider.
-
----
-
-# 🖥️ Desktop Application
-
-The graphical interface is built using **PySide6**.
-
-The application provides:
-
-* Conversational interaction
-* Message history
-* Chat management
-* AI status indicators
-* Background task execution
-* Persistent conversations
-* Development task execution
-
-Long-running AI operations are handled outside the main GUI thread to keep the interface responsive.
+The application separates user interaction from long-running AI operations.
 
 ```text
-GUI
- │
- ▼
-AIWorker
- │
- ▼
+PySide6 GUI
+     │
+     ▼
+AI Worker
+     │
+     ▼
 MainOrchestrator
- │
- ▼
-Agents / Tools / LLM
+     │
+     ▼
+Agents / Systems
+     │
+     ▼
+Tools / Memory / LLM
 ```
 
----
-
-# 🧵 Background Execution
-
-AI operations are executed outside the main GUI thread.
-
-This prevents long-running operations such as:
-
-* LLM requests
-* Planning
-* File operations
-* Code analysis
-
-from blocking the user interface.
-
-The worker communicates results back to the GUI through Qt signals.
-
----
-
-# 🧪 Testing
-
-The project includes automated testing with **pytest** as well as development-oriented testing infrastructure.
-
-## Pytest
-
-Run the automated test suite with:
-
-```bash
-pytest
-```
-
-Pytest is used for component-level testing and regression testing.
-
-## Development Testing
-
-The project also contains development-oriented infrastructure for validating integrated workflows.
-
-Typical integration flow:
-
-```text
-User Request
-     ↓
-Decision
-     ↓
-Orchestrator
-     ↓
-Planner
-     ↓
-Tool
-     ↓
-Result
-```
-
-This combination helps identify both isolated component failures and integration-level problems.
-
----
-
-# 📁 Project Structure
-
-```text
-AI-Studio-Agent/
-│
-├── agents/
-│   ├── base_agent.py
-│   ├── chat_agent.py
-│   ├── decision_agent.py
-│   ├── planner_agent.py
-│   ├── tool_agent.py
-│   └── code_agent.py
-│
-├── app/
-│   ├── core/
-│   │   ├── orchestrators/
-│   │   │   ├── main_orchestrator.py
-│   │   │   ├── chat_orchestrator.py
-│   │   │   └── development_orchestrator.py
-│   │   │
-│   │   └── logger.py
-│   │
-│   ├── window/
-│   │   └── chat_controller.py
-│   │
-│   ├── worker.py
-│   └── gui.py
-│
-├── memory/
-│   ├── memory.py
-│   ├── conversation.py
-│   └── chat_manager.py
-│
-├── models/
-│   ├── llm.py
-│   ├── api_llm.py
-│   └── llm_provider.py
-│
-├── tools/
-│   ├── calculator.py
-│   ├── file_tool.py
-│   ├── tool_registry.py
-│   ├── code_writer.py
-│   ├── code_analyzer.py
-│   └── code_repair.py
-│
-├── tests/
-├── devtest/
-├── data/
-│
-├── requirements.txt
-├── main.py
-└── README.md
-```
-
-> The exact project structure may evolve as the architecture is refined.
-
----
-
-# ⚙️ Installation
-
-## Requirements
-
-* Python 3.12+
-* Windows, Linux, or macOS
-* Internet connection for API-based LLM providers
-* NVIDIA NIM API credentials for the current API configuration
-
-## Clone the Repository
-
-```bash
-git clone https://github.com/Erenk43456/AI-Studio-Agent.git
-cd AI-Studio-Agent
-```
-
-## Create a Virtual Environment
-
-```bash
-python -m venv venv
-```
-
-### Windows
-
-```powershell
-venv\Scripts\activate
-```
-
-## Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Configure the required LLM provider credentials according to the project's configuration.
-
----
-
-# ▶️ Running the Application
-
-Launch the desktop application with:
+The application entry point is:
 
 ```bash
 python -m app.gui
 ```
 
+Background execution prevents long-running AI operations from blocking the graphical interface.
+
 ---
 
-# 🧪 Running Tests
+# Testing
 
-Run the automated test suite with:
+Flust uses **pytest** as its primary automated testing framework.
+
+The testing architecture is divided into multiple levels:
+
+```text
+tests/
+│
+├── unit/
+├── contracts/
+├── integration/
+├── e2e/
+├── benchmarks/
+├── evaluation/
+├── fixtures/
+└── fakes/
+```
+
+Pytest is configured with explicit markers for:
+
+* `unit`
+* `contract`
+* `integration`
+* `e2e`
+* `benchmark`
+* `slow`
+* `network`
+* `llm`
+
+Benchmark tests are excluded from the default pytest run.
 
 ```bash
 pytest
 ```
 
-Development-specific tests can be executed through the project's development testing workflow.
+Detailed test functions, test responsibilities, benchmark methodology, and validation procedures are documented separately.
+
+See:
+
+**`TESTS-BENCHMARKS.md`**
 
 ---
 
-# 💡 Example Usage
+# Test Coverage
 
-## Create a File
+The repository currently organizes tests by architectural responsibility.
 
-```text
-test.txt dosyası oluştur içine merhaba yaz
-```
+## Unit
 
-The request is converted into a structured operation and executed through the file tool.
-
-## Read a File
+### Agents and Orchestration
 
 ```text
-test.txt dosyasını oku
+test_agent_container.py
+test_base_agent.py
+test_decision_agent.py
+test_planner_agent.py
+test_code_agent.py
+test_main_container.py
+test_main_orchestrator.py
+test_chat_orchestrator.py
+test_development_container.py
+test_development_context.py
+test_development_orchestrator.py
 ```
 
-## Development Request
+### Tools and Tool Infrastructure
 
 ```text
-Bu Python dosyasındaki hatayı analiz et ve düzelt.
+test_calculator.py
+test_file_tool.py
+test_formatter_tool.py
+test_validation_tool.py
+test_tool_container.py
+test_tool_registry.py
+test_code_writer_tool.py
+test_code_writer_atomic_write.py
+test_code_analyzer_tool.py
+test_code_repair_tool.py
+test_repository_analyzer_tool.py
 ```
 
-## General Conversation
+### Memory
 
 ```text
-Python'da decorator nedir?
+test_memory.py
+test_memory_agent.py
+test_memory_container.py
+test_memory_orchestrator.py
+test_memory_tool.py
+test_project_memory.py
+test_project_memory_sync.py
+test_json_store.py
+test_conversation.py
 ```
 
-Requests are routed to the appropriate subsystem through the decision layer.
+### Repository Intelligence
+
+```text
+test_python_analyzer.py
+test_repository_analysis.py
+test_repository_analyzer_ownership.py
+test_repository_analyzer_project_memory.py
+test_repository_context_resolver.py
+test_repository_indexer.py
+test_repository_knowledge_persistence.py
+```
+
+### LLM and Infrastructure
+
+```text
+test_api_llm.py
+test_llm.py
+test_llm_planner.py
+test_llm_provider.py
+test_llm_router.py
+test_config_manager.py
+test_contracts.py
+test_atomic_writer.py
+test_logger.py
+test_worker.py
+test_workspace_watcher.py
+test_fakes.py
+```
+
+## Contracts
+
+```text
+test_agent_contract.py
+test_llm_provider_contract.py
+test_planner_contract.py
+test_tool_contract.py
+```
+
+## Integration
+
+### Agent and Memory
+
+```text
+test_agent_memory.py
+```
+
+### Development
+
+```text
+test_development_pipeline.py
+```
+
+### Planning and Tool Execution
+
+```text
+test_planner_tool_pipeline.py
+```
+
+### Tool Agent
+
+```text
+test_tool_agent.py
+```
+
+End-to-end test infrastructure is reserved under `tests/e2e/` and can be expanded as full application workflows become part of the release validation process.
+
+Individual test function names and their exact responsibilities belong in `TESTS-BENCHMARKS.md`, keeping this README focused on architecture rather than implementation-level test details.
 
 ---
 
-# 📊 Development Status
+# Benchmarks
 
-**Status: Active Development**
+Flust contains a dedicated benchmark system for evaluating AI-assisted development behavior.
 
-The core application architecture is operational and currently focused on **stabilization, testing, and optimization**.
-
-## Implemented
-
-* [x] Modular agent architecture
-* [x] Main orchestration
-* [x] Decision routing
-* [x] Chat system
-* [x] Memory system
-* [x] Development system
-* [x] LLM-based planning
-* [x] Tool registry
-* [x] File operations
-* [x] Workspace restrictions
-* [x] File backup mechanism
-* [x] Conversation persistence
-* [x] Project memory
-* [x] API LLM integration
-* [x] PySide6 desktop GUI
-* [x] Background AI worker
-* [x] Structured logging
-* [x] Error propagation
-* [x] Code-oriented tooling
-* [x] Automated testing infrastructure
-* [x] Development testing infrastructure
-
-## Current Focus
-
-The current development phase focuses on improving reliability rather than introducing major architectural changes.
-
-Current priorities include:
-
-* Improving planner reliability
-* Reducing unnecessary LLM calls
-* Improving tool validation
-* Standardizing tool responses
-* Improving error propagation
-* Optimizing context handling
-* Improving Code Agent reliability
-* Expanding automated test coverage
-* Improving response quality
-* Improving system stability
-
-The immediate goal is to make the existing architecture **more reliable, predictable, and efficient** before introducing larger autonomous-agent capabilities.
-
----
-
-# 🔬 Engineering Approach
-
-Development follows an incremental engineering process:
+Current benchmark scenarios include:
 
 ```text
-Architecture
-     ↓
-Implementation
-     ↓
-Integration
-     ↓
-Testing
-     ↓
-Debugging
-     ↓
-Stabilization
-     ↓
-Optimization
-     ↓
-Expansion
+B01 — New File Creation
+B02 — Existing File Modification
+B03 — Unrelated File Preservation
+B04 — Multi-File Feature
+B05 — Existing Code Preservation
 ```
 
-Rather than continuously adding new AI capabilities, the project prioritizes making existing components reliable and predictable.
+The benchmark architecture evaluates the development pipeline across components such as:
 
-This approach helps identify architectural problems before the system becomes significantly more complex.
+```text
+Decision
+   ↓
+Planner
+   ↓
+Code / Tool Execution
+   ↓
+Result Validation
+```
+
+Benchmark tasks are stored under:
+
+```text
+benchmarks/tasks/
+```
+
+and generated benchmark results are stored under:
+
+```text
+benchmarks/results/
+```
+
+Detailed benchmark methodology and result interpretation are documented in:
+
+**`TESTS-BENCHMARKS.md`**
 
 ---
 
-# 🎯 Design Principles
+# Current Status
 
-## Modularity
+Flust is under active development.
 
-Each major responsibility is isolated into its own component.
+The current implementation provides:
 
-## Separation of Concerns
+* modular dependency containers
+* main request routing
+* specialized agents
+* chat and memory systems
+* development orchestration
+* LLM-based planning
+* centralized tool execution
+* repository analysis
+* project memory
+* workspace watching
+* workspace isolation
+* PySide6 desktop application
+* pytest-based testing
+* contract and integration testing
+* development benchmarks
 
-Decision-making, planning, execution, memory, model integration, and presentation are separated into distinct layers.
+The architecture already contains the primary components required for a future self-development loop.
 
-## Extensibility
+The autonomous improvement controller itself remains part of the development roadmap.
 
-New agents, tools, models, and systems can be introduced without rewriting the entire application.
+---
 
-## Model Independence
+# Development Roadmap
 
-The architecture is not fundamentally tied to a specific LLM provider or model.
+The roadmap is intentionally short and focuses on architectural milestones.
+
+```text
+Phase 1 — Core Framework
+        │
+        ▼
+Phase 2 — Tool and Workspace Infrastructure
+        │
+        ▼
+Phase 3 — Repository Intelligence
+        │
+        ▼
+Phase 4 — Memory Evolution
+        │
+        ▼
+Phase 5 — Self-Development Loop
+        │
+        ▼
+Phase 6 — Evaluation and Reliability
+        │
+        ▼
+Phase 7 — Distribution and Runtime
+```
+
+The detailed task list is maintained in:
+
+**`TODO.md`**
+
+---
+
+# Development Principles
+
+Flust development follows several core principles.
+
+## Safety First
+
+AI-generated operations must remain inside explicit capability and workspace boundaries.
+
+## Correctness Before Autonomy
+
+A more autonomous system is not considered an improvement if it reduces reliability or makes behavior harder to validate.
+
+## Validate Before Trust
+
+Generated plans and generated code should be validated through deterministic application logic and automated tests wherever possible.
+
+## Explicit Failure Propagation
+
+Failures must remain observable.
+
+The system should not convert failed operations into successful-looking results.
 
 ## Controlled Execution
 
-LLM-generated plans are executed through application-controlled tools rather than giving the model unrestricted access to system capabilities.
+LLMs produce decisions and plans; concrete system operations are performed through controlled application components.
 
-## Safety
+## Persistent Knowledge
 
-Filesystem operations are bounded by an explicit workspace.
+Repository knowledge should evolve with the project instead of being reconstructed from scratch for every task.
 
-## Maintainability
+## Modular Architecture
 
-The project favors clear component boundaries and incremental development over tightly coupled implementations.
+Agents, orchestrators, tools, memory, and model providers should remain independently replaceable where practical.
 
-## Testability
+## Test Every Architectural Change
 
-Components and integrated workflows are designed to be testable independently.
-
----
-
-# 🚀 Future Development
-
-Potential future improvements include:
-
-* Multi-model agent specialization
-* Advanced project-level RAG
-* Repository-wide code understanding
-* Automated test generation
-* Code verification loops
-* Improved planning and replanning
-* Tool result validation
-* More advanced long-term memory
-* Local LLM support
-* Agent performance evaluation
-* Automated benchmarking
-* More sophisticated development workflows
-* Improved autonomous task execution
-
-These are future development directions rather than requirements of the current architecture.
+New behavior should be accompanied by appropriate tests and validated through the relevant regression and benchmark infrastructure.
 
 ---
 
-# 🧭 Project Philosophy
+# Technology
 
-AI-Studio-Agent is not intended to be simply a chatbot with a collection of tools.
+| Component               | Technology                                  |
+| ----------------------- | ------------------------------------------- |
+| Language                | Python                                      |
+| GUI                     | PySide6                                     |
+| Testing                 | Pytest                                      |
+| AI Models               | Pluggable LLM providers                     |
+| Memory                  | Persistent JSON-based systems               |
+| Repository Intelligence | Custom analysis and indexing infrastructure |
+| Packaging               | PyInstaller                                 |
+| Architecture            | Modular agents + orchestrators + tools      |
 
-The project explores how an AI system can be structured as a software platform where:
+---
+
+# Repository Structure
 
 ```text
-Language Understanding
-        ↓
-Decision Making
-        ↓
-Planning
-        ↓
-Controlled Execution
-        ↓
-Result Handling
-        ↓
-Memory
-        ↓
-Verification
+Flust/
+│
+├── agents/
+│
+├── app/
+│   ├── core/
+│   │   ├── containers/
+│   │   ├── orchestrators/
+│   │   ├── memory/
+│   │   ├── workspace/
+│   │   └── ...
+│   │
+│   ├── gui/
+│   └── ...
+│
+├── tools/
+│
+├── tests/
+│   ├── unit/
+│   ├── contracts/
+│   ├── integration/
+│   ├── e2e/
+│   ├── benchmarks/
+│   ├── evaluation/
+│   ├── fixtures/
+│   └── fakes/
+│
+├── benchmarks/
+│   ├── tasks/
+│   └── results/
+│
+├── contracts/
+│
+├── memory/
+│
+├── models/
+│
+├── README.md
+├── TODO.md
+├── TESTS-BENCHMARKS.md
+└── pytest.ini
 ```
-
-can be separated into independently maintainable components.
-
-The long-term goal is to evolve this foundation into a more capable **AI-assisted development environment** while maintaining control, reliability, and architectural clarity.
 
 ---
 
-# 📌 Project Status
+# Development Workflow
 
-**Active Development**
-
-The core system is operational and currently focused on:
+A typical development cycle is:
 
 ```text
-Stabilization
-     ↓
-Testing
-     ↓
-Optimization
+Define Requirement
+       │
+       ▼
+Analyze Repository
+       │
+       ▼
+Build Development Context
+       │
+       ▼
+Create Plan
+       │
+       ▼
+Execute Through Tools
+       │
+       ▼
+Run Tests
+       │
+       ▼
+Validate Result
+       │
+       ▼
+Update Project Knowledge
+       │
+       ▼
+Review Change
 ```
 
-Major architectural expansion will follow after the existing components reach a higher level of reliability.
+For future autonomous development:
+
+```text
+Observe
+   ↓
+Analyze
+   ↓
+Plan
+   ↓
+Modify
+   ↓
+Test
+   ↓
+Evaluate
+   ↓
+Learn
+   ↓
+Improve
+   └──────────────► Observe
+```
 
 ---
 
-# 👨‍💻 Author
+# Long-Term Goal
 
-**Eren K.**
+The long-term goal of Flust is to become a modular AI system capable of operating as a persistent development environment rather than a simple conversational assistant.
 
-AI-Studio-Agent is an independent software engineering project focused on exploring:
+The intended evolution is:
 
-* Artificial Intelligence
-* Multi-Agent Systems
-* LLM Engineering
-* Software Architecture
-* AI-Assisted Programming
-* Developer Tools
-* Memory Systems
-* Task Planning
-* Tool-Oriented AI Systems
+```text
+AI Assistant
+     │
+     ▼
+AI Development Agent
+     │
+     ▼
+Repository-Aware Agent
+     │
+     ▼
+Self-Evaluating Development System
+     │
+     ▼
+Self-Improving Development System
+```
+
+Flust is designed to provide the software architecture required for this progression while keeping execution controlled, observable, testable, and safe.
 
 ---
 
-# 🔗 Repository
+# License
 
-[GitHub Repository](https://github.com/Erenk43456/AI-Studio-Agent)
-
----
-
-# 📄 License
-
-This project is licensed under the **MIT License**.
-
-See the [LICENSE](LICENSE) file for the full license text.
+Flust is released under the MIT License.
